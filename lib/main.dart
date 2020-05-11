@@ -1,5 +1,9 @@
+import 'package:agenda/ui/home_page.dart';
 import 'package:flutter/material.dart';
 
-void maind() {
-  runApp(MaterialApp());
+void main() {
+  runApp(MaterialApp(
+    home: Homepage(),
+    debugShowCheckedModeBanner: false,
+  ));
 }

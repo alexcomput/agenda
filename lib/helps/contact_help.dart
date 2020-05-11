@@ -1,6 +1,5 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:sqflite/sql.dart';
 
 final String contactTable = "contactTable";
 final String idColumn = "idColumn";
@@ -31,10 +30,11 @@ class ContactHelp {
     final databasesPah = await getDatabasesPath();
     final path = join(databasesPah, 'contacts2.db');
 
-    openDatabase(path, version: 1, onCreate: (Database db, newVersion) async {
+    return openDatabase(path, version: 1,
+        onCreate: (Database db, int newVersion) async {
       await db.execute(
         "CREATE TABLE $contactTable($idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $emailColumn TEXT,"
-            "$phoneColumn TEXT, $imgColumn TEXT)",
+        "$phoneColumn TEXT, $imgColumn TEXT)",
       );
     });
   }
@@ -59,17 +59,16 @@ class ContactHelp {
     }
   }
 
-  Future<int> deleteConct(int id) async {
+  Future<int> deleteContact(int id) async {
     Database dbContact = await db;
-    return await dbContact.delete(
-        contactTable, where: "$idColumn = ?", whereArgs: [id]);
+    return await dbContact
+        .delete(contactTable, where: "$idColumn = ?", whereArgs: [id]);
   }
 
   Future<int> updateContact(Contact contact) async {
     Database dbContact = await db;
-    return await dbContact.update(
-        contactTable, contact.toMap(), where: "$idColumn = ? ",
-        whereArgs: [contact.id]);
+    return await dbContact.update(contactTable, contact.toMap(),
+        where: "$idColumn = ? ", whereArgs: [contact.id]);
   }
 
   Future<List<Contact>> getAllContact() async {
@@ -101,10 +100,12 @@ class Contact {
   String phone;
   String img;
 
+  Contact();
+
   Contact.fromMap(Map map) {
     id = map[idColumn];
     name = map[nameColumn];
-    email = map[nameColumn];
+    email = map[emailColumn];
     phone = map[phoneColumn];
     img = map[imgColumn];
   }
